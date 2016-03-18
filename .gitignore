@@ -30,3 +30,6 @@
 # Test and train directories
 test/*
 train/*
+svm_multiclass/*
+!svm_multiclass/svm_multiclass_classify
+!svm_multiclass/svm_multiclass_learn
