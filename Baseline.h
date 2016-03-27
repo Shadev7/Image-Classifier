@@ -60,7 +60,7 @@ public:
 
   string read_predict_file(const string &filename){
     ifstream myReadFile;
-    myReadFile.open(filename);
+    myReadFile.open(filename.c_str());
     char output[3];
     myReadFile.get(output[0]);
     myReadFile.get(output[1]);

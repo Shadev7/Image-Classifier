@@ -58,8 +58,8 @@ def predict(image_path):
     # print cmd
     os.system(cmd)
     with open(".temp") as f:
-        index = int(f.read(2)) - 1
-        return categores[index]
+        index = f.read(2)
+        return index 
 
 if __name__ == "__main__":
     import sys
