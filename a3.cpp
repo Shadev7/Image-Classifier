@@ -92,7 +92,7 @@ int main(int argc, char **argv)
       classifier = new NearestNeighbor(class_list);
 	else if (algo == "bow")
 		classifier = new BagOfWords(class_list);
-	else if (algo == "ev")
+	else if (algo == "eigen")
 		classifier = new EigenVec(class_list);
     else
       throw std::string("unknown classifier " + algo);
