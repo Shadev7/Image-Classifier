@@ -32,7 +32,9 @@ def normalize_folder(folder):
 def normalize_file(image_path, file_path):
     from make_overfeat import check_size, iserror, resize
     if not os.path.isfile(file_path) or iserror(file_path):
-        resize(image_path)
+        width, height = check_size(image_path)
+        if width != 231 or height != 231:
+            resize(image_path)
         cmd = "./overfeat/bin/linux_64/overfeat -f %s > %s"%(image_path, file_path)
         print cmd
         os.system(cmd)

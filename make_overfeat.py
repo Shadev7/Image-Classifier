@@ -36,7 +36,9 @@ if __name__ == "__main__":
                 new_folder = "deep/%s-feature/%s"%(folder,category)
                 os.system("mkdir -p %s"%new_folder)
                 if not os.path.isfile(des) or iserror(des):
-                    resize(image_path)
+                    width, height = check_size(image_path)
+                    if width != 231 or height != 231:
+                        resize(image_path)
                     cmd = "./overfeat/bin/linux_64/overfeat -f %s > %s"%(image_path, des)
                     print "cmd:%s"%cmd
                     os.system(cmd)
