@@ -13,5 +13,5 @@ for category in os.listdir(folder):
             if not os.path.isfile(featurename):
                 cmd = "./overfeat/bin/linux_64/overfeat_batch -f %s > deep/%s-feature/%s"%(image_path, folder, featurename)
                 print "cmd:%s"%cmd
-            #os.system(cmd)
+                os.system(cmd)
 
