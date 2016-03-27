@@ -21,9 +21,11 @@ def iserror(thefile):
     return False
 
 def resize(file_path):
-    cmd = "convert %s -resize %sx%s\! %s"%(file_path, 231, 231,file_path)
+    des = "231x231/%s"%file_path
+    cmd = "convert %s -resize %sx%s\! %s"%(file_path, 231, 231,des)
     # print cmd
     os.system(cmd)
+    return des
 
 if __name__ == "__main__":
     for category in os.listdir(folder):
@@ -38,7 +40,7 @@ if __name__ == "__main__":
                 if not os.path.isfile(des) or iserror(des):
                     width, height = check_size(image_path)
                     if width != 231 or height != 231:
-                        resize(image_path)
+                        image_path = resize(image_path)
                     cmd = "./overfeat/bin/linux_64/overfeat -f %s > %s"%(image_path, des)
                     print "cmd:%s"%cmd
                     os.system(cmd)
