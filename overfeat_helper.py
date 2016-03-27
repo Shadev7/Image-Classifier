@@ -44,7 +44,7 @@ def predict(image_path):
     des_file = os.path.join("deep", "test-feature", *split_image_path[1:])+".features"
     normalize_file(image_path, des_file)
     cmd = "./svm_multiclass/svm_multiclass_classify %s c1.model .temp > .info"%image_path
-    width open(".temp") as f:
+    with open(".temp") as f:
         index = int(f.read(2)) - 1
         return categores[index]
 

@@ -23,7 +23,7 @@ def iserror(thefile):
 def resize(file_path):
     des = "231x231/%s"%file_path
     index = des.rfind("/")
-    os.system("mkdir -p %s")%des[:index]
+    os.system("mkdir -p %s"%des[:index])
     cmd = "convert %s -resize %sx%s\! %s"%(file_path, 231, 231,des)
     # print cmd
     os.system(cmd)
