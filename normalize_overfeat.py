@@ -30,7 +30,8 @@ def normalize_folder(folder):
 
 
 def normalize_file(file_path):
-    pass
+    from make_overfeat import check_size, iserror, resize
+    
 
 if __name__ == "__main__":
     import sys
@@ -38,7 +39,8 @@ if __name__ == "__main__":
     if os.path.isdir(arg):
         arg = arg.rstrip("/")
         normalize_folder(arg)
-
+    else:
+        pass
 
 
 
