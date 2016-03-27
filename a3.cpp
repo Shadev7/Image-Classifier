@@ -39,6 +39,7 @@ using namespace std;
 typedef map<string, vector<string> > Dataset;
 
 #include <Classifier.h>
+#include <Baseline.h>
 #include <NearestNeighbor.h>
 
 // Figure out a list of files in a given directory.
@@ -77,10 +78,14 @@ int main(int argc, char **argv)
 
     // set up the classifier based on the requested algo
     Classifier *classifier=0;
-    if(algo == "nn")
+    if(algo == "baseline"){ // for part1
+      classifier = new Baseline(class_list);
+    }else if(algo == "nn"){
       classifier = new NearestNeighbor(class_list);
-    else
+    }
+    else{
       throw std::string("unknown classifier " + algo);
+    }
 
     // now train or test!
     if(mode == "train")
