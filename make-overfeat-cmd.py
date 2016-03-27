@@ -13,8 +13,20 @@ def check_size(file_path):
     (width, height) = [ int(x) for x in re.sub('[\t\r\n"]', '', dim).split(',') ]
     return (width, height)
 
-def resize(file_path):
-    cmd = "convert %s -resize 231x231 %s"%(file_path, file_path)
+def iserror(thefile):
+    with open(thefile, "r") as f:
+        t = f.readlines()
+        if len(t) < 2:
+            return True
+    return False
+
+def resize(file_path, width, height):
+
+    ratio = 250 / float(min(width, height))
+    width = int(width * ratio) + 1
+    height = int(height * ratio) + 1
+
+    cmd = "convert %s -resize %sx%s %s"%(file_path, width, height,file_path)
     print cmd
     os.system(cmd)
 
@@ -27,10 +39,10 @@ for category in os.listdir(folder):
             des = "deep/%s-feature/%s"%(folder, featurename[5:])
             new_folder = "deep/%s-feature/%s"%(folder,category)
             os.system("mkdir -p %s"%new_folder)
-            if not os.path.isfile(des):
+            if not os.path.isfile(des) or thefile(des):
                 width, height = check_size(image_path)
-                if  width < 231 and height < 231:
-                    resize(image_path)
+                if  width < 231 or height < 231:
+                    resize(image_path, width, height)
                 cmd = "./overfeat/bin/linux_64/overfeat -f %s > %s"%(image_path, des)
                 print "cmd:%s"%cmd
                 os.system(cmd)
