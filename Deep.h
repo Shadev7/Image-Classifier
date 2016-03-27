@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <sstream>
+#include <memory>
 
 using namespace std;
 

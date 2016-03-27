@@ -2,6 +2,7 @@
 #define SIZE 28
 
 #include <fstream>
+#include <sstream>
 using namespace std;
 
 
@@ -66,7 +67,10 @@ public:
     output[2] = '\0';
     myReadFile.close();
     string categoryi = string(output);
-    return category[stoi(categoryi)-1];
+    int value;
+    istringstream buffer(categoryi);
+    buffer >> value; 
+    return category[value-1];
   }
 
   virtual void train(const Dataset &filenames)
