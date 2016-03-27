@@ -45,7 +45,6 @@ public:
   {
     system(("python overfeat_helper.py " + filename + " > .predict").c_str());
     string result = read_predict_file(".predict");
-    cout<< "result: "<<result<<endl;
     return result;
   }
 
