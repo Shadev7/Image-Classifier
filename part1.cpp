@@ -2,7 +2,7 @@
 
 
 #include "part1.h"
-#define SIZE 40
+#define SIZE 28
 
 using namespace std;
 
@@ -37,7 +37,7 @@ void write_data(int category,
     for (int y = 0; y < output._height; y++) {
         for (int x = 0; x < output._width; x++) {
             int featureN = output._height*y + x + 1;
-            myfile << featureN << ":"<< (1 - ((int)output(x,y,0,0) / 255.0)) << " ";
+            myfile << featureN << ":"<<  ((int)output(x,y,0,0) / 255.0) << " ";
         }
     }
     myfile << endl;
@@ -72,9 +72,7 @@ void make_data(string name){
 
 int main(int argc, char **argv)
 {
-    make_data("train");
     make_data("test");
-
 }
 
 
