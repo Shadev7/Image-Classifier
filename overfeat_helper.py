@@ -40,7 +40,7 @@ def normalize_file(image_path, file_path):
         os.system(cmd)
 
 def predict(image_path):
-    split_image_path = os.path.slit(image_path)
+    split_image_path = os.path.split(image_path)
     des_file = os.path.join("deep", "test-feature", *split_image_path[1:])+".features"
     normalize_file(image_path, des_file)
     cmd = "./svm_multiclass/svm_multiclass_classify %s c1.model .temp > .info"%image_path
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         arg = arg.rstrip("/")
         normalize_folder(arg)
     else:
-        pass
+        print predict(arg)
 
 
 

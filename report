@@ -21,8 +21,8 @@ team member:
 ## Deep features:
     * we find some images are too small, so we need resize it to 231x231 to fit the soft requirement.
     * we mainly use the python script to deal with the data, we mainly use imagemagick to deal with the image.
-    * `make-overfeat-cmd.py` is to conver raw image to feature files, which store in deep/
-    * `normalize-overfeat.py` is to combine these feature into a file to fit svm_multoclass format.
+    * `make_overfeat.py` is to conver raw image to feature files, which store in deep/
+    * `overfeat_helper.py` is to combine these feature into a file to fit svm_multoclass format.
     * we assume the test image is under test/, we have already add python command into c++ (through system call).
     * result: 
 

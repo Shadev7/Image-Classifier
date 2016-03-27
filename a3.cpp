@@ -41,6 +41,7 @@ typedef map<string, vector<string> > Dataset;
 #include <Classifier.h>
 #include <Baseline.h>
 #include <NearestNeighbor.h>
+#include <Deep.h>
 
 // Figure out a list of files in a given directory.
 //
@@ -82,6 +83,8 @@ int main(int argc, char **argv)
       classifier = new Baseline(class_list);
     }else if(algo == "nn"){
       classifier = new NearestNeighbor(class_list);
+    }else if(algo == "deep"){
+      classifier = new Deep(class_list);
     }
     else{
       throw std::string("unknown classifier " + algo);
