@@ -4,10 +4,23 @@
 #include <fstream>
 using namespace std;
 
+
+string category[] = {"bagel","bread","brownie","chickennugget",
+                           "churro","croissant","frenchfries","hamburger",
+                           "hotdog","jambalaya","kungpaochicken","lasagna",
+                           "muffin","paella","pizza","popcorn","pudding",
+                           "salad","salmon","scone","spaghetti","sushi",
+                           "taco","tiramisu","waffle"};
+
 class Baseline : public Classifier
 {
 public:
-  Baseline(const vector<string> &_class_list) : Classifier(_class_list) {}
+  map<string, int> category_map;
+  Baseline(const vector<string> &_class_list) : Classifier(_class_list) {
+    for(int i=0; i<25;i++){
+      category_map[category[i]] = i;
+    }
+  }
 
 
   void write_data(int category,
@@ -29,7 +42,6 @@ public:
   void make_data(const Dataset &filenames, string name){
     ofstream myfile;
     myfile.open("baseline/" + name + ".data");
-    int c = 0;
     for (Dataset::const_iterator c_iter = filenames.begin(); c_iter != filenames.end(); ++c_iter)
     {
       cout << "Processing " <<name <<"/" << c_iter->first << endl;
@@ -39,24 +51,23 @@ public:
         CImg<unsigned char> query_image(c_iter->second[i].c_str());
         query_image = query_image.get_RGBtoYCbCr().get_channel(0);
         query_image.resize(SIZE, SIZE);
-        write_data(c, query_image, myfile);
+        write_data(category_map[c_iter->first.c_str()]+1, query_image, myfile);
       }
-      c++;
     }
     myfile.close();
   }
 
-  // int read_predict_file(string &filename){
-  //   ifstream myReadFile;
-  //   myReadFile.open(filename);
-  //   char output[2];
-  //   myReadFile >> output;
-  //   myReadFile >> output;
-
-  //   cout << output << endl;
-  //   myReadFile.close();
-  //   return 0;
-  // }
+  string read_predict_file(const string &filename){
+    ifstream myReadFile;
+    myReadFile.open(filename);
+    char output[3];
+    myReadFile.get(output[0]);
+    myReadFile.get(output[1]);
+    output[2] = '\0';
+    myReadFile.close();
+    string categoryi = string(output);
+    return category[stoi(categoryi)-1];
+  }
 
   virtual void train(const Dataset &filenames)
   {
@@ -72,11 +83,12 @@ public:
     CImg<unsigned char> query_image(filename.c_str());
     query_image = query_image.get_RGBtoYCbCr().get_channel(0);
     query_image.resize(SIZE, SIZE);
-    // write_data(i+1, query_image, myfile);
+    int temp = filename.find("/");
+    string category_name = filename.substr(temp+1, filename.find("/"));
+    write_data(category_map[category_name]+1, query_image, myfile);
     myfile.close();
-    system("./svm_multiclass/svm_multiclass_classify baseline/test.data baseline/model baseline/predict > .info");
-    // read_predict_file();
-
+    system("./svm_multiclass/svm_multiclass_classify .temp baseline/model baseline/predict > .info");
+    return read_predict_file("baseline/predict");
   }
 
   virtual void load_model()
