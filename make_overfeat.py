@@ -26,7 +26,7 @@ def resize(file_path, width, height):
     width = int(width * ratio) + 1
     height = int(height * ratio) + 1
 
-    cmd = "convert %s -resize %sx%s %s"%(file_path, width, height,file_path)
+    cmd = "convert %s -resize %sx%s\! %s"%(file_path, width, height,file_path)
     print cmd
     os.system(cmd)
 
