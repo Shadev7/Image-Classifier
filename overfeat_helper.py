@@ -29,9 +29,24 @@ def normalize_folder(folder):
     target_f.close()
 
 
-def normalize_file(file_path):
+def normalize_file(image_path, file_path):
     from make_overfeat import check_size, iserror, resize
-    
+    if not os.path.isfile(file_path) or iserror(file_path):
+        width, height = check_size(image_path)
+        if  width < 231 or height < 231:
+            resize(image_path, width, height)
+        cmd = "./overfeat/bin/linux_64/overfeat -f %s > %s"%(image_path, file_path)
+        print cmd
+        os.system(cmd)
+
+def predict(image_path):
+    split_image_path = os.path.slit(image_path)
+    des_file = os.path.join("deep", "test-feature", *split_image_path[1:])+".features"
+    normalize_file(image_path, des_file)
+    cmd = "./svm_multiclass/svm_multiclass_classify %s c1.model .temp > .info"%image_path
+    width open(".temp") as f:
+        index = int(f.read(2)) - 1
+        return categores[index]
 
 if __name__ == "__main__":
     import sys
