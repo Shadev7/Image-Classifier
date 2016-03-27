@@ -29,7 +29,16 @@
 #include <dirent.h>
 #include <map>
 #include <numeric>
+#include <fstream>
+//#include "cv.h"
+#include <opencv2/core/core.hpp>
+//#include <opencv2/imgproc/imgproc.hpp>
+//#include <opencv2/objdetect/objdetect.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
+
+ 
+using namespace cv;
 //Use the cimg namespace to access the functions easily
 using namespace cimg_library;
 using namespace std;
@@ -40,6 +49,8 @@ typedef map<string, vector<string> > Dataset;
 
 #include <Classifier.h>
 #include <NearestNeighbor.h>
+#include <BagOfWords.h>
+#include <EigenVec.h>
 
 // Figure out a list of files in a given directory.
 //
@@ -79,6 +90,10 @@ int main(int argc, char **argv)
     Classifier *classifier=0;
     if(algo == "nn")
       classifier = new NearestNeighbor(class_list);
+	else if (algo == "bow")
+		classifier = new BagOfWords(class_list);
+	else if (algo == "ev")
+		classifier = new EigenVec(class_list);
     else
       throw std::string("unknown classifier " + algo);
 
