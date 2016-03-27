@@ -1,11 +1,15 @@
+
+#include <fstream>
+#include <sstream>
+
+using namespace std;
+
 string category_e[] = {"bagel","bread","brownie","chickennugget",
                            "churro","croissant","frenchfries","hamburger",
                            "hotdog","jambalaya","kungpaochicken","lasagna",
                            "muffin","paella","pizza","popcorn","pudding",
                            "salad","salmon","scone","spaghetti","sushi",
                            "taco","tiramisu","waffle"};
-#include <fstream>
-using namespace std;
 
 class EigenVec : public Classifier
 {
@@ -62,17 +66,20 @@ public:
 	  system ("./svm_multiclass/svm_multiclass_learn -c 50 train_ev.data ev_model > .info");
   }
   string read_predict_file(const string &filename){
-    /* ofstream myReadFile;
-    myReadFile.open(filename);
+    ifstream myReadFile;
+    myReadFile.open(filename.c_str());
     char output[3];
     myReadFile.get(output[0]);
     myReadFile.get(output[1]);
     output[2] = '\0';
     myReadFile.close();
     string categoryi = string(output);
-    //return category_e[stoi(categoryi)-1];  */
-	return "aa";
+    int value;
+    istringstream buffer(categoryi);
+    buffer >> value; 
+    return category_e[value-1];  
   }
+
   int category_map(string category_name)
   {
 	  int category;
@@ -93,17 +100,7 @@ public:
 	test_image = test_image.get_RGBtoYCbCr().get_channel(0);
 	test_image.resize(size, size);
 	CImgList<float> eigen_vecs = eigen_decomp(test_image);
-    /* CImg<double> test_image = extract_features(filename);
-	      
-    // figure nearest neighbor
-    pair<string, double> best("", 10e100);
-    double this_cost;
-    for(int c=0; c<class_list.size(); c++)
-      for(int row=0; row<models[ class_list[c] ].height(); row++)
-	if((this_cost = (test_image - models[ class_list[c] ].get_row(row)).magnitude()) < best.second)
-	  best = make_pair(class_list[c], this_cost); */
-
-    //return best.first;
+    
 	
 	ofstream myfile;
     myfile.open(".temp");
@@ -111,7 +108,7 @@ public:
     //int temp = filename.find("/");
     //string category_name = filename.substr(temp+1, filename.find_last_of("/"));
 	string category_name = filename.substr(filename.find("/") + 1,filename.find_last_of("/") - filename.find("/") -1);
-	cout << category_name << endl;
+	
 	//cin.get();
     //write_data(category_map[category_name]+1, query_image, myfile);
 	int category = category_map(category_name)+1 ;
@@ -121,21 +118,20 @@ public:
 	{
 		for (int k=0; k<eigen_vecs[2].width(); k++)
 		{
-			 myfile << (j*eigen_vecs[2].width() + k + 1) << ":"<< eigen_vecs[2].atXY(j,k) << " ";
+			 myfile << (j*eigen_vecs[2].width() + k + 1) << ":"<< (float) eigen_vecs[2].atXY(j,k) << " ";
 		}
 	}
 	myfile << endl;
 	
     myfile.close();
     system("./svm_multiclass/svm_multiclass_classify .temp ev_model ev_predict > .info");
-    //return read_predict_file("ev_predict");
-	return category_name;
+    string result = read_predict_file("ev_predict");
+    cout << result << endl;
+    return result;
   }
 
   virtual void load_model()
   {
-    /* for(int c=0; c < class_list.size(); c++)
-      models[class_list[c] ] = (CImg<double>(("ev_model." + class_list[c] + ".png").c_str())); */
   }
   CImg<double> extract_features(const string &filename)
     {
@@ -143,109 +139,13 @@ public:
     }
   CImgList<float> eigen_decomp(CImg<double> ip_img)
     {
-	  /*CImg<double> ip_img(filename.c_str());
-	  ip_img.assign(ip_img.resize(size,size,1,1));
-	  cout << "name : " <<filename.c_str() <<endl;
-	  cout << "size : " <<size <<endl;
-	  cout << "width : " <<ip_img.width() <<endl;
-	  cout << "heigth : " << ip_img.height() << endl;
-	  ip_img.assign(ip_img.matrix());
-	  CImg<double> eVal;
-	  CImg<double> eVec;
-	  ip_img.eigen(eVal, eVec);
-	  cout << "done" << endl;
-	  return eVec;*/
-	  //CImg<double> U,S,V;
+	  
 	  CImgList<float> USV = ip_img.get_SVD();
 	  
-	  /* cout << "width U: " <<USV[0].width() <<endl;
-	  cout << "height U: " <<USV[0].height() <<endl;
-	  cout << "width S: " <<USV[1].width() <<endl;
-	  cout << "height S: " <<USV[1].height() <<endl;
-	  cout << "width V: " <<USV[2].width() <<endl;
-	  cout << "height V: " <<USV[2].height() <<endl; */
-	  /* for (int i = 0; i< USV[2].width();i++)
-	  {
-		  for (int j = 0; j< USV[2].width();j++)
-		  {
-			cout << USV[2].atXY(i,j) << ",";
-		  }
-		  cout << endl;
-		  //break;
-	  }
-	  cout << "width S: " <<USV[1].width() <<endl;
-	  cout << "height S: " <<USV[1].height() <<endl;
-	  for (int i = 0; i< USV[0].height();i++)
-	  {
-
-		cout << USV[1].atXY(0,i) << ",";
-		 //break;
-	  }
-	  cout << endl; */
-	  //cin.get();
+	  
 	  return USV;
     }
 	
-	
-/* 	CImg<double> eigen_decomp2(CImg<double> ip_img)
-    {
-
-	  CImgList<float> VecVal = ip_img.get_symmetric_eigen();
-	  
-	  cout << "width vec: " <<VecVal[0].width() <<endl;
-	  cout << "height vec: " <<VecVal[0].height() <<endl;
-	  cout << "width val: " <<VecVal[1].width() <<endl;
-	  cout << "height val: " <<VecVal[1].height() <<endl;
-
-	  for (int i = 0; i< VecVal[0].width();i++)
-	  {
-		  for (int j = 0; j< VecVal[0].width();j++)
-		  {
-			cout << VecVal[0].atXY(i,j) << ",";
-		  }
-		  cout << endl;
-		  break;
-	  }
-	  cout << "width S: " <<VecVal[1].width() <<endl;
-	  cout << "height S: " <<VecVal[1].height() <<endl;
-	  for (int i = 0; i< VecVal[1].height();i++)
-	  {
-
-		cout << VecVal[1].atXY(0,i) << ",";
-		break;
-		 
-	  }
-	  cout << endl;
-	  //cin.get();
-	  return VecVal[0];
-    } */
-/* 	
-	CImg<double> haar_features(CImg<double> ip_vec)
-    {
-		CImg<double> haar_wavelet (ip_vec.haar('x'));
-		return haar_wavelet;
-	}
-	CImg<double> integral_images(CImg<double> ip_vec)
-    {
-		CImg<double> integral_image(ip_vec) ;
-		for (int i=0;i<ip_vec.width() ; i++)
-		{
-			for (int j=0;j<ip_vec.height() ; j++)
-			{
-				integral_image.atXY(i,j) = ip_vec.atXY(i,j);
-				if (i > 0)
-					integral_image.atXY(i,j) += integral_image.atXY(i -1,j);
-				if (j > 0)
-					integral_image.atXY(i,j) += integral_image.atXY(i -1,j);
-				if (i>0 && j > 0)
-					integral_image.atXY(i,j) -= integral_image.atXY(i -1,j -1);
-				//integral_image.atXY(i,j) = ip_vec.atXY(i,j) + integral_image.atXY(i-1,j) + integral_image.atXY(i,j-1) - integral_image.atXY(i-1,j-1);
-			}
-		}
-		return integral_image;
-	}
-	 */
-
 
 
 protected:
