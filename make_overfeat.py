@@ -30,6 +30,11 @@ def resize(file_path):
     return des
 
 if __name__ == "__main__":
+    import sys
+    global folder
+    if len(sys.argv) > 1:
+        folder = sys.argv[1]
+
     for category in os.listdir(folder):
         test_path = os.path.join(folder, category)
         if os.path.isdir(test_path):
