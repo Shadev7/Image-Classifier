@@ -39,7 +39,7 @@ for category in os.listdir(folder):
             des = "deep/%s-feature/%s"%(folder, featurename[5:])
             new_folder = "deep/%s-feature/%s"%(folder,category)
             os.system("mkdir -p %s"%new_folder)
-            if not os.path.isfile(des) or thefile(des):
+            if not os.path.isfile(des) or iserror(des):
                 width, height = check_size(image_path)
                 if  width < 231 or height < 231:
                     resize(image_path, width, height)
