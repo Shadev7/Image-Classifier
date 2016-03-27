@@ -9,6 +9,7 @@ team member:
 
 ## Baeline:
     * all the processed data will be store in the baseline/ folder
+    * we grey scale the image and divide the value by 255 (we get better result and train faster when do this)
     * result:  accuracy: 30 of 250 = 12% 
     * It did not improve much when use color.
 
@@ -20,6 +21,7 @@ team member:
 
 ## Deep features:
     * the training process and testing process is quite slow. We have already put pre-process test data in deep/test-feature, the model is deep/c46.model 
+    * we assume the overfeat is location in overfeat/
     * we find some images are too small, so we need resize it to 231x231 to fit the soft requirement.
     * we mainly use the python script to deal with the data, we mainly use imagemagick to deal with the image.
     * `make_overfeat.py` is to conver raw image to feature files, which store in deep/
