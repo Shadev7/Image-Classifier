@@ -20,14 +20,9 @@ def iserror(thefile):
             return True
     return False
 
-def resize(file_path, width, height):
-
-    ratio = 250 / float(min(width, height))
-    width = int(width * ratio) + 1
-    height = int(height * ratio) + 1
-
-    cmd = "convert %s -resize %sx%s\! %s"%(file_path, width, height,file_path)
-    print cmd
+def resize(file_path):
+    cmd = "convert %s -resize %sx%s\! %s"%(file_path, 231, 231,file_path)
+    # print cmd
     os.system(cmd)
 
 if __name__ == "__main__":
@@ -41,9 +36,7 @@ if __name__ == "__main__":
                 new_folder = "deep/%s-feature/%s"%(folder,category)
                 os.system("mkdir -p %s"%new_folder)
                 if not os.path.isfile(des) or iserror(des):
-                    width, height = check_size(image_path)
-                    if  width < 231 or height < 231:
-                        resize(image_path, width, height)
+                    resize(image_path)
                     cmd = "./overfeat/bin/linux_64/overfeat -f %s > %s"%(image_path, des)
                     print "cmd:%s"%cmd
                     os.system(cmd)
