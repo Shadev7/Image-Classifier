@@ -42,7 +42,7 @@ public:
 
   void make_data(const Dataset &filenames, string name){
     ofstream myfile;
-    myfile.open("baseline/" + name + ".data");
+    myfile.open(("baseline/" + name + ".data").c_str());
     for (Dataset::const_iterator c_iter = filenames.begin(); c_iter != filenames.end(); ++c_iter)
     {
       cout << "Processing " <<name <<"/" << c_iter->first << endl;
@@ -60,7 +60,7 @@ public:
 
   string read_predict_file(const string &filename){
     ifstream myReadFile;
-    myReadFile.open(filename);
+    myReadFile.open(filename.c_str());
     char output[3];
     myReadFile.get(output[0]);
     myReadFile.get(output[1]);

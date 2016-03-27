@@ -9,6 +9,7 @@ team member:
 
 ## Baeline:
     * all the processed data will be store in the baseline/ folder
+    * we grey scale the image and divide the value by 255 (we get better result and train faster when do this)
     * result:  accuracy: 30 of 250 = 12% 
     * It did not improve much when use color.
 
@@ -19,13 +20,18 @@ team member:
 ## Bags-of-words:
 
 ## Deep features:
+    * the training process and testing process is quite slow. We have already put pre-process test data in deep/test-feature, the model is deep/c46.model 
+    * we assume the overfeat is location in overfeat/
     * we find some images are too small, so we need resize it to 231x231 to fit the soft requirement.
     * we mainly use the python script to deal with the data, we mainly use imagemagick to deal with the image.
     * `make_overfeat.py` is to conver raw image to feature files, which store in deep/
     * `overfeat_helper.py` is to combine these feature into a file to fit svm_multoclass format.
     * we assume the test image is under test/, we have already add python command into c++ (through system call).
-    * result: 
+    * result: accuracy: 191 of 250 = 76%
 
 ## Future imporvement:
-    
+    ## for speed, use cuda to increase the speed. Integral python & c++ smoothly.
+    ## we did not do this, but maybe we can use test/ for training.
+    ## overfeat is 14.2% when doing clasification (source: http://www.image-net.org/challenges/LSVRC/2013/slides/overfeat_ilsvrc2013.pdf), but we get 24%, so we could do much better, maybe using large pixels? or maybe combine several nets? 
+
 
