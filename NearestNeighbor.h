@@ -31,7 +31,7 @@ public:
       for(int row=0; row<models[ class_list[c] ].height(); row++)
 	if((this_cost = (test_image - models[ class_list[c] ].get_row(row)).magnitude()) < best.second)
 	  best = make_pair(class_list[c], this_cost);
-
+	cout <<"bf : " << best.first<<endl;
     return best.first;
   }
 
