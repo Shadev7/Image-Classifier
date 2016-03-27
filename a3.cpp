@@ -51,6 +51,8 @@ typedef map<string, vector<string> > Dataset;
 #include <NearestNeighbor.h>
 #include <BagOfWords.h>
 #include <EigenVec.h>
+#include <Baseline.h>
+#include <Deep.h>
 
 // Figure out a list of files in a given directory.
 //
@@ -88,12 +90,16 @@ int main(int argc, char **argv)
 
     // set up the classifier based on the requested algo
     Classifier *classifier=0;
-    if(algo == "nn")
+    if (algo == "nn")
       classifier = new NearestNeighbor(class_list);
-	else if (algo == "bow")
-		classifier = new BagOfWords(class_list);
-	else if (algo == "eigen")
-		classifier = new EigenVec(class_list);
+    else if (algo == "bow")
+      classifier = new BagOfWords(class_list);
+    else if (algo == "baseline")
+      classifier = new Baseline(class_list);
+    else if (algo == "Deep")
+      classifier = new Deep(class_list);
+    else if (algo == "eigen")
+      classifier = new EigenVec(class_list);
     else
       throw std::string("unknown classifier " + algo);
 
