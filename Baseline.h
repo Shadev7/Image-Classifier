@@ -26,53 +26,62 @@ public:
 
   }
 
-  virtual void train(const Dataset &filenames)
-  {
+  void make_data(const Dataset &filenames, string name){
+    ofstream myfile;
+    myfile.open("baseline/" + name + ".data");
+    int c = 0;
     for (Dataset::const_iterator c_iter = filenames.begin(); c_iter != filenames.end(); ++c_iter)
     {
-      cout << "Processing " << c_iter->first << endl;
-      ofstream myfile;
-      myfile.open("baseline/train.data");
+      cout << "Processing " <<name <<"/" << c_iter->first << endl;
       // convert each image to be a row of this "model" image
       for (int i = 0; i < c_iter->second.size(); i++) 
       {
         CImg<unsigned char> query_image(c_iter->second[i].c_str());
         query_image = query_image.get_RGBtoYCbCr().get_channel(0);
         query_image.resize(SIZE, SIZE);
-        write_data(i+1, query_image, myfile);
+        write_data(c, query_image, myfile);
       }
-
+      c++;
     }
+    myfile.close();
+  }
+
+  // int read_predict_file(string &filename){
+  //   ifstream myReadFile;
+  //   myReadFile.open(filename);
+  //   char output[2];
+  //   myReadFile >> output;
+  //   myReadFile >> output;
+
+  //   cout << output << endl;
+  //   myReadFile.close();
+  //   return 0;
+  // }
+
+  virtual void train(const Dataset &filenames)
+  {
+    make_data(filenames, "train");
+    // make_data(filenames, "test");
+    system ("./svm_multiclass/svm_multiclass_learn -c 50 baseline/train.data baseline/model > .info");
   }
 
   virtual string classify(const string &filename)
   {
-    CImg<double> test_image = extract_features(filename);
+    ofstream myfile;
+    myfile.open(".temp");
+    CImg<unsigned char> query_image(filename.c_str());
+    query_image = query_image.get_RGBtoYCbCr().get_channel(0);
+    query_image.resize(SIZE, SIZE);
+    // write_data(i+1, query_image, myfile);
+    myfile.close();
+    system("./svm_multiclass/svm_multiclass_classify baseline/test.data baseline/model baseline/predict > .info");
+    // read_predict_file();
 
-    // figure nearest neighbor
-    pair<string, double> best("", 10e100);
-    double this_cost;
-    for (int c = 0; c < class_list.size(); c++)
-      for (int row = 0; row < models[ class_list[c] ].height(); row++)
-        if ((this_cost = (test_image - models[ class_list[c] ].get_row(row)).magnitude()) < best.second)
-          best = make_pair(class_list[c], this_cost);
-
-    return best.first;
   }
 
   virtual void load_model()
   {
-    for (int c = 0; c < class_list.size(); c++)
-      models[class_list[c] ] = (CImg<double>(("nn_model." + class_list[c] + ".png").c_str()));
-  }
-protected:
-  // extract features from an image, which in this case just involves resampling and
-  // rearranging into a vector of pixel data.
-  CImg<double> extract_features(const string &filename)
-  {
-    return (CImg<double>(filename.c_str())).resize(size, size, 1, 3).unroll('x');
+
   }
 
-  static const int size = 20; // subsampled image resolution
-  map<string, CImg<double> > models; // trained models
 };

@@ -72,9 +72,7 @@ void make_data(string name){
 
 int main(int argc, char **argv)
 {
-    make_data("train");
     make_data("test");
-
 }
 
 
