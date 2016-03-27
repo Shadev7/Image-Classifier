@@ -1,6 +1,6 @@
 ## a helper python script
 
-
+import re
 import os
 import subprocess
 folder = "test"
