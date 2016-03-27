@@ -28,9 +28,10 @@ def normalize_folder(folder):
                     target_f.write(str(category_dict[category]+1) + " " + line + "\n")
     target_f.close()
 
-
+## for predict
 def normalize_file(image_path, file_path):
     from make_overfeat import check_size, iserror, resize
+    category = image_path.split("/")[1]
     if not os.path.isfile(file_path) or iserror(file_path):
         width, height = check_size(image_path)
         if width != 231 or height != 231:
@@ -38,12 +39,23 @@ def normalize_file(image_path, file_path):
         cmd = "./overfeat/bin/linux_64/overfeat -f %s > %s"%(image_path, file_path)
         print cmd
         os.system(cmd)
+    target = ".temp.data"
+    target_f = open(target, "w")
+    with open(file_path, "r") as f:
+        t = f.readlines()
+        s = t[1].rstrip()
+        line = " ".join(["%s:%s"%(index+1, value) for index, value in enumerate(s.split())])
+        target_f.write(str(category_dict[category]+1) + " " + line + "\n")
+    target_f.close()
+    return target
 
 def predict(image_path):
     split_image_path = os.path.split(image_path)
     des_file = os.path.join("deep", "test-feature", *split_image_path[1:])+".features"
-    normalize_file(image_path, des_file)
-    cmd = "./svm_multiclass/svm_multiclass_classify %s c1.model .temp > .info"%image_path
+    des_file = normalize_file(image_path, des_file)
+    cmd = "./svm_multiclass/svm_multiclass_classify %s deep/c46.model .temp > .info"%des_file
+    print cmd
+    os.system(cmd)
     with open(".temp") as f:
         index = int(f.read(2)) - 1
         return categores[index]
