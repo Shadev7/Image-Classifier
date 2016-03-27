@@ -2,9 +2,12 @@
 
 // http://stackoverflow.com/a/478960/847357
 
-#define SIZE 28
-
+#include <iostream>
 #include <fstream>
+#include <string>
+#include <cstdlib>
+#include <sstream>
+
 using namespace std;
 
 
@@ -12,11 +15,8 @@ using namespace std;
 class Deep : public Classifier
 {
 public:
-  map<string, int> category_map;
   Deep(const vector<string> &_class_list) : Classifier(_class_list) {
-    for(int i=0; i<25;i++){
-      category_map[category[i]] = i;
-    }
+
   }
 
 
@@ -41,7 +41,9 @@ public:
 
   virtual string classify(const string &filename)
   {
-    return exec(("python overfeat_helper.py " + filename).c_str());
+    string result = exec(("python overfeat_helper.py " + filename).c_str());
+    cout<< "result: "<<result<<endl;
+    return result;
   }
 
   virtual void load_model()

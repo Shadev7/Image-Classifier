@@ -37,7 +37,8 @@ def normalize_file(image_path, file_path):
         if width != 231 or height != 231:
             image_path = resize(image_path)
         cmd = "./overfeat/bin/linux_64/overfeat -f %s > %s"%(image_path, file_path)
-        print cmd
+        os.system("mkdir -p %s"%os.path.split(file_path)[0])
+        # print cmd
         os.system(cmd)
     target = ".temp.data"
     target_f = open(target, "w")
@@ -50,11 +51,11 @@ def normalize_file(image_path, file_path):
     return target
 
 def predict(image_path):
-    split_image_path = os.path.split(image_path)
+    split_image_path = image_path.split("/")
     des_file = os.path.join("deep", "test-feature", *split_image_path[1:])+".features"
     des_file = normalize_file(image_path, des_file)
     cmd = "./svm_multiclass/svm_multiclass_classify %s deep/c46.model .temp > .info"%des_file
-    print cmd
+    # print cmd
     os.system(cmd)
     with open(".temp") as f:
         index = int(f.read(2)) - 1
