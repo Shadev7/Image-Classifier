@@ -16,6 +16,7 @@ def check_size(file_path):
 def resize(file_path):
     cmd = "convert %s -resize 231x231 %s"%(file_path, file_path)
     print cmd
+    os.system(cmd)
 
 for category in os.listdir(folder):
     test_path = os.path.join(folder, category)
