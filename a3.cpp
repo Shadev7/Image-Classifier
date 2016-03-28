@@ -53,6 +53,7 @@ typedef map<string, vector<string> > Dataset;
 #include <EigenVec.h>
 #include <Baseline.h>
 #include <Deep.h>
+#include <haar.h>
 
 // Figure out a list of files in a given directory.
 //
@@ -98,6 +99,8 @@ int main(int argc, char **argv)
       classifier = new Baseline(class_list);
     else if (algo == "Deep")
       classifier = new Deep(class_list);
+    else if (algo == "haar")
+      classifier = new haar(class_list);
     else if (algo == "eigen")
       classifier = new EigenVec(class_list);
     else
