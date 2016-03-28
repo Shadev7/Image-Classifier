@@ -97,7 +97,7 @@ int main(int argc, char **argv)
       classifier = new BagOfWords(class_list);
     else if (algo == "baseline")
       classifier = new Baseline(class_list);
-    else if (algo == "Deep")
+    else if (algo == "deep")
       classifier = new Deep(class_list);
     else if (algo == "haar")
       classifier = new haar(class_list);
