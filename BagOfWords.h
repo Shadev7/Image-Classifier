@@ -15,6 +15,7 @@ class BagOfWords : public Classifier
 public:
   BagOfWords(const vector<string> &_class_list) : Classifier(_class_list) {}
   	
+	//Distance between k means centroid and point
 	double sift_distance2(vector<double> k_point, SiftDescriptor ip)
 	{
 		  
@@ -28,6 +29,7 @@ public:
 		return dist2;
 	}
 	
+	//Classify a sift descriptor to a bag
 	int get_bag(vector<vector<double> > k_points,SiftDescriptor ip, int k)
 	{
 		double min_dist = std::numeric_limits<double>::max();
@@ -47,7 +49,7 @@ public:
 		return bag;
 	}
 	
-
+	//Generate bag of words from sift descriptors
 	vector<int> image_bag(CImg<double> ip_img,vector<vector<double> > k_points, int k)
 	{
 		//int k = k_points.size();
@@ -145,18 +147,18 @@ public:
 		  }
 		  k_points.push_back(temprow);
 	}
-	k_pt_img.save_png("k_means_points.png"); // to be used while classifying
+	k_pt_img.save_png("bow/k_means_points.png"); // to be used while classifying
 	
 
 	
 	//BOW
 	
 	ofstream myfile;
-    myfile.open ("train_bow.data");	
+    myfile.open ("bow/train_bow.data");	
 	int category = 0;
 	for(Dataset::const_iterator c_iter=filenames.begin(); c_iter != filenames.end(); ++c_iter)
       {
-		category += 1;
+		category = category_map(c_iter->first);
 		cout << "Processing " << c_iter->first << endl;
 		CImg<double> class_vectors(k, filenames.size(), 1);
 		
@@ -180,7 +182,7 @@ public:
 
       }
 	  myfile.close();
-	  system ("./svm_multiclass/svm_multiclass_learn -c 50 train_bow.data bow_model > .info");
+	  system ("./svm_multiclass/svm_multiclass_learn -c 50 bow/train_bow.data bow/bow_model > .info");
  }
 string read_predict_file(const string &filename){
    ifstream myReadFile;
@@ -216,7 +218,7 @@ string read_predict_file(const string &filename){
 		//Read 
 		vector<vector<double> > k_points;
 		
-		CImg<double> K_image("k_means_points.png");
+		CImg<double> K_image("bow/k_means_points.png");
 		int k = K_image.height();
 		
 		for (int i = 0; i < k; i++)
@@ -232,10 +234,8 @@ string read_predict_file(const string &filename){
 	  CImg<double> ip_img(filename.c_str());
 	  vector <int> bags_dist = image_bag(ip_img,k_points,k);
 	  
-	  cout << "a"<< endl;
 	ofstream myfile;
     myfile.open(".temp");
-	cout << "b"<< endl;
 
     string category_name = filename.substr(filename.find("/") + 1,filename.find_last_of("/") - filename.find("/") -1);
 	
@@ -251,13 +251,8 @@ string read_predict_file(const string &filename){
 	myfile << endl;
 	
     myfile.close();
-	cout << "c"<< endl;
-    system("./svm_multiclass/svm_multiclass_classify .temp bow_model bow_predict > .info");
-	cout << "d"<< endl;
-    return read_predict_file("bow_predict");
-
-     
-
+    system("./svm_multiclass/svm_multiclass_classify .temp bow/bow_model bow/bow_predict > .info");
+    return read_predict_file("bow/bow_predict");
   }
 
   virtual void load_model()

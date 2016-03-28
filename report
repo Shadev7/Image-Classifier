@@ -3,22 +3,32 @@
 
 team member:
     Yang Zhang(zhang505)
-    (alassoue)
-    (ssdevadi)
+    Ayoub Lassoued(alassoue)
+    Shashant Devadiga(ssdevadi)
 
 
-## Baeline:
+## Baseline:
     * all the processed data will be store in the baseline/ folder
     * we grey scale the image and divide the value by 255 (we get better result and train faster when do this)
     * result:  accuracy: 30 of 250 = 12% 
     * It did not improve much when use color.
 
 ## Eigenfood:
-
-## Haar-like:
+	* Resized the image and extracted features using SVD decomposition
+	* Used top 10 eigen vectors
+	* Accuracy: 13 of 250 = 5.2%
+	
+## Haar-like features:
+	*1500 features consisting in sums and differences of squares have been generated : 500 two-rectangle features, 500 three-rectangle    features and 500 four-rectangle features.
+	*A vector of 1500 elements, featurevector, is generated for each       image.
+    *The training time is less than 30 minutes for the given training se set. 
 
 ## Bags-of-words:
-
+	* Resized the image to 100x100 pixels to reduce running time of training from 60 minutes to 20 minutes
+	* Implemented kmeans clusting using OpenCV. The OpenCV modules required are added to git under folder opencv2
+	* Saved the generated bad of words as an image so that it can used for classification
+	* accuracy: 47 0f 250 = 19%
+	* The first eigen value is quite high as compared to the second 
 ## Deep features:
     * the training process and testing process is quite slow. We have already put pre-process test data in deep/test-feature, the model is deep/c46.model 
     * we assume the overfeat is location in overfeat/
